@@ -1,0 +1,96 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  firstName    String?  @map("first_name")
+  lastName     String?  @map("last_name")
+  dateOfBirth  DateTime? @map("date_of_birth") @db.Date
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  foodEntries FoodEntry[]
+  moodEntries MoodEntry[]
+
+  @@map("users")
+}
+
+model FoodEntry {
+  id              Int      @id @default(autoincrement())
+  userId          Int      @map("user_id")
+  foodName        String   @map("food_name")
+  quantity        Decimal? @db.Decimal(10, 2)
+  unit            String?
+  nutritionalData Json?    @map("nutritional_data")
+  consumedAt      DateTime @map("consumed_at")
+  notes           String?  @db.Text
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("food_entries")
+}
+
+model MoodEntry {
+  id            Int      @id @default(autoincrement())
+  userId        Int      @map("user_id")
+  moodRating    Int      @map("mood_rating")
+  moodType      MoodType @map("mood_type")
+  intensity     Decimal? @db.Decimal(3, 2)
+  durationMinutes Int?   @map("duration_minutes")
+  startedAt     DateTime @map("started_at")
+  endedAt       DateTime? @map("ended_at")
+  notes         String?  @db.Text
+  triggers      String?  @db.Text
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("mood_entries")
+}
+
+model FoodDatabase {
+  id                Int      @id @default(autoincrement())
+  name              String
+  brand             String?
+  category          String?
+  servingSize       Decimal? @map("serving_size") @db.Decimal(10, 2)
+  servingUnit       String?  @map("serving_unit")
+  caloriesPerServing Decimal? @map("calories_per_serving") @db.Decimal(10, 2)
+  proteinPerServing Decimal? @map("protein_per_serving") @db.Decimal(10, 2)
+  carbsPerServing   Decimal? @map("carbs_per_serving") @db.Decimal(10, 2)
+  fatPerServing     Decimal? @map("fat_per_serving") @db.Decimal(10, 2)
+  fiberPerServing   Decimal? @map("fiber_per_serving") @db.Decimal(10, 2)
+  sugarPerServing   Decimal? @map("sugar_per_serving") @db.Decimal(10, 2)
+  sodiumPerServing  Decimal? @map("sodium_per_serving") @db.Decimal(10, 2)
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  @@map("food_database")
+}
+
+enum MoodType {
+  happy
+  sad
+  anxious
+  energetic
+  tired
+  stressed
+  calm
+  irritable
+  focused
+  confused
+}

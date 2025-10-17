@@ -91,8 +91,10 @@ export class FoodService {
     return this.http.get(`${this.API_URL}/food-entries/summary`, { params });
   }
 
-  searchFoodDatabase(query: string): Observable<any> {
-    const params = new HttpParams().set('q', query);
+  searchFoodDatabase(query: string, limit: number = 10): Observable<any> {
+    const params = new HttpParams()
+      .set('q', query)
+      .set('limit', limit.toString());
     return this.http.get(`${this.API_URL}/foods/search`, { params });
   }
 

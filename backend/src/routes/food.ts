@@ -312,4 +312,83 @@ router.get('/summary', authenticateToken, async (req: AuthRequest, res) => {
   }
 });
 
+// Search food database
+router.get('/search', authenticateToken, async (req: AuthRequest, res) => {
+  try {
+    const query = req.query.q as string;
+    const limit = parseInt(req.query.limit as string) || 10;
+
+    if (!query || query.length < 2) {
+      return res.status(400).json({
+        success: false,
+        error: 'Query parameter "q" is required and must be at least 2 characters long'
+      });
+    }
+
+    const foods = await prisma.foodDatabase.findMany({
+      where: {
+        OR: [
+          { name: { contains: query, mode: 'insensitive' } },
+          { brand: { contains: query, mode: 'insensitive' } },
+          { category: { contains: query, mode: 'insensitive' } }
+        ]
+      },
+      take: limit,
+      orderBy: [
+        { name: 'asc' }
+      ]
+    });
+
+    res.json({
+      success: true,
+      data: {
+        foods,
+        query,
+        total: foods.length
+      }
+    });
+  } catch (error) {
+    console.error('Search food database error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Internal server error'
+    });
+  }
+});
+
+// Get food from database by ID
+router.get('/database/:id', authenticateToken, async (req: AuthRequest, res) => {
+  try {
+    const foodId = parseInt(req.params.id);
+    if (isNaN(foodId)) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid food ID'
+      });
+    }
+
+    const food = await prisma.foodDatabase.findUnique({
+      where: { id: foodId }
+    });
+
+    if (!food) {
+      return res.status(404).json({
+        success: false,
+        error: 'Food not found in database'
+      });
+    }
+
+    res.json({
+      success: true,
+      data: { food }
+    });
+  } catch (error) {
+    console.error('Get food from database error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Internal server error'
+    });
+  }
+});
+
 export default router;

@@ -58,6 +58,7 @@ app.get('/health', (req, res) => {
 // API routes
 app.use('/api/auth', authRoutes);
 app.use('/api/food-entries', foodRoutes);
+app.use('/api/foods', foodRoutes); // Food database search routes
 app.use('/api/mood-entries', moodRoutes);
 app.use('/api/analytics', analyticsRoutes);
 

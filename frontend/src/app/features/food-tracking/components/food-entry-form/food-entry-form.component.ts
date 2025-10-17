@@ -9,7 +9,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTabsModule } from '@angular/material/tabs';
 import { FoodService, FoodEntry } from '../../../../core/services/food.service';
+import { FoodSearchComponent } from '../food-search/food-search.component';
 
 @Component({
   selector: 'app-food-entry-form',
@@ -23,7 +25,9 @@ import { FoodService, FoodEntry } from '../../../../core/services/food.service';
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatTabsModule,
+    FoodSearchComponent
   ],
   template: `
     <div class="form-container">
@@ -33,57 +37,100 @@ import { FoodService, FoodEntry } from '../../../../core/services/food.service';
         </mat-card-header>
         
         <mat-card-content>
-          <form [formGroup]="foodForm" (ngSubmit)="onSubmit()">
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Food Name</mat-label>
-              <input matInput formControlName="foodName" required>
-              <mat-error *ngIf="foodForm.get('foodName')?.hasError('required')">
-                Food name is required
-              </mat-error>
-            </mat-form-field>
+          <mat-tab-group [(selectedIndex)]="selectedTab">
+            <!-- Search Tab -->
+            <mat-tab label="Search Food">
+              <div class="tab-content">
+                <app-food-search 
+                  (foodSelected)="onFoodSelected($event)"
+                  (customFoodRequested)="onCustomFoodRequested()">
+                </app-food-search>
+                
+                <div *ngIf="selectedFood" class="selected-food-section">
+                  <h3>Selected Food</h3>
+                  <div class="food-details">
+                    <h4>{{ selectedFood.name }}</h4>
+                    <p *ngIf="selectedFood.brand" class="food-brand">{{ selectedFood.brand }}</p>
+                    <div class="nutrition-info" *ngIf="selectedFood.caloriesPerServing">
+                      <div class="nutrition-item">
+                        <mat-icon>local_fire_department</mat-icon>
+                        <span>{{ selectedFood.caloriesPerServing }} cal per {{ selectedFood.servingUnit || 'serving' }}</span>
+                      </div>
+                      <div class="nutrition-item" *ngIf="selectedFood.proteinPerServing">
+                        <mat-icon>fitness_center</mat-icon>
+                        <span>{{ selectedFood.proteinPerServing }}g protein</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <button mat-raised-button color="primary" (click)="proceedWithSelectedFood()">
+                    Use This Food
+                  </button>
+                </div>
+              </div>
+            </mat-tab>
+            
+            <!-- Manual Entry Tab -->
+            <mat-tab label="Manual Entry">
+              <div class="tab-content">
+                <form [formGroup]="foodForm" (ngSubmit)="onSubmit()">
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Food Name</mat-label>
+                    <input matInput formControlName="foodName" required>
+                    <mat-error *ngIf="foodForm.get('foodName')?.hasError('required')">
+                      Food name is required
+                    </mat-error>
+                  </mat-form-field>
 
-            <div class="form-row">
-              <mat-form-field appearance="outline" class="half-width">
-                <mat-label>Quantity</mat-label>
-                <input matInput type="number" formControlName="quantity" min="0" step="0.1">
-              </mat-form-field>
+                  <div class="form-row">
+                    <mat-form-field appearance="outline" class="half-width">
+                      <mat-label>Quantity</mat-label>
+                      <input matInput type="number" formControlName="quantity" min="0" step="0.1">
+                    </mat-form-field>
 
-              <mat-form-field appearance="outline" class="half-width">
-                <mat-label>Unit</mat-label>
-                <input matInput formControlName="unit" placeholder="e.g., grams, cups, pieces">
-              </mat-form-field>
-            </div>
+                    <mat-form-field appearance="outline" class="half-width">
+                      <mat-label>Unit</mat-label>
+                      <input matInput formControlName="unit" placeholder="e.g., grams, cups, pieces">
+                    </mat-form-field>
+                  </div>
 
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>When did you eat this?</mat-label>
-              <input matInput type="datetime-local" formControlName="consumedAt" required>
-              <mat-error *ngIf="foodForm.get('consumedAt')?.hasError('required')">
-                Date and time are required
-              </mat-error>
-            </mat-form-field>
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>When did you eat this?</mat-label>
+                    <input matInput type="datetime-local" formControlName="consumedAt" required>
+                    <mat-error *ngIf="foodForm.get('consumedAt')?.hasError('required')">
+                      Date and time are required
+                    </mat-error>
+                  </mat-form-field>
 
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Notes (optional)</mat-label>
-              <textarea matInput formControlName="notes" rows="3" placeholder="Any additional notes about this food entry..."></textarea>
-            </mat-form-field>
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Notes (optional)</mat-label>
+                    <textarea matInput formControlName="notes" rows="3" placeholder="Any additional notes about this food entry..."></textarea>
+                  </mat-form-field>
 
-            <div class="form-actions">
-              <button mat-button type="button" (click)="goBack()">Cancel</button>
-              <button mat-raised-button color="primary" type="submit" [disabled]="foodForm.invalid || isLoading">
-                <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
-                <span *ngIf="!isLoading">{{ isEditMode ? 'Update' : 'Add' }} Entry</span>
-              </button>
-            </div>
-          </form>
+                  <div class="form-actions">
+                    <button mat-button type="button" (click)="goBack()">Cancel</button>
+                    <button mat-raised-button color="primary" type="submit" [disabled]="foodForm.invalid || isLoading">
+                      <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
+                      <span *ngIf="!isLoading">{{ isEditMode ? 'Update' : 'Add' }} Entry</span>
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </mat-tab>
+          </mat-tab-group>
         </mat-card-content>
       </mat-card>
     </div>
   `,
   styles: [`
     .form-container {
-      max-width: 600px;
+      max-width: 800px;
       margin: 0 auto;
       padding: 20px;
+    }
+    
+    .tab-content {
+      padding: 20px 0;
     }
     
     .full-width {
@@ -111,13 +158,77 @@ import { FoodService, FoodEntry } from '../../../../core/services/food.service';
     mat-spinner {
       margin-right: 8px;
     }
+    
+    .selected-food-section {
+      margin-top: 24px;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      border: 1px solid #e0e0e0;
+    }
+    
+    .selected-food-section h3 {
+      margin: 0 0 16px 0;
+      color: #333;
+    }
+    
+    .food-details h4 {
+      margin: 0 0 8px 0;
+      color: #2e7d32;
+      font-size: 18px;
+    }
+    
+    .food-brand {
+      margin: 0 0 12px 0;
+      color: #666;
+      font-style: italic;
+    }
+    
+    .nutrition-info {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    
+    .nutrition-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      color: #2e7d32;
+    }
+    
+    .nutrition-item mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
   `]
 })
+interface FoodItem {
+  id: number;
+  name: string;
+  brand?: string;
+  category?: string;
+  servingSize?: number;
+  servingUnit?: string;
+  caloriesPerServing?: number;
+  proteinPerServing?: number;
+  carbsPerServing?: number;
+  fatPerServing?: number;
+  fiberPerServing?: number;
+  sugarPerServing?: number;
+  sodiumPerServing?: number;
+}
+
 export class FoodEntryFormComponent implements OnInit {
   foodForm: FormGroup;
   isEditMode = false;
   isLoading = false;
   entryId: number | null = null;
+  selectedTab = 0;
+  selectedFood: FoodItem | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -218,5 +329,27 @@ export class FoodEntryFormComponent implements OnInit {
 
   goBack() {
     this.router.navigate(['/food-tracking']);
+  }
+
+  onFoodSelected(food: FoodItem) {
+    this.selectedFood = food;
+  }
+
+  onCustomFoodRequested() {
+    this.selectedTab = 1; // Switch to manual entry tab
+  }
+
+  proceedWithSelectedFood() {
+    if (this.selectedFood) {
+      // Populate the form with selected food data
+      this.foodForm.patchValue({
+        foodName: this.selectedFood.name,
+        quantity: this.selectedFood.servingSize || 1,
+        unit: this.selectedFood.servingUnit || 'serving'
+      });
+      
+      // Switch to manual entry tab to complete the form
+      this.selectedTab = 1;
+    }
   }
 }

@@ -1,0 +1,5 @@
+{
+  "FoodMoodTracker.Api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "E:\\sourcecontrol\\me_tracker_ai\\backend-csharp\\FoodMoodTracker.Api",
+  "FoodMoodTracker.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "E:\\sourcecontrol\\me_tracker_ai\\backend-csharp\\FoodMoodTracker.Core",
+  "FoodMoodTracker.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "E:\\sourcecontrol\\me_tracker_ai\\backend-csharp\\FoodMoodTracker.Infrastructure"
+}

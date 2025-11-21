@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "JoiK8bGxlIg=",
+  "success": true,
+  "projectFilePath": "E:\\sourcecontrol\\me_tracker_ai\\backend-csharp\\FoodMoodTracker.Core\\FoodMoodTracker.Core.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\coril\\.nuget\\packages\\fluentvalidation\\11.5.1\\fluentvalidation.11.5.1.nupkg.sha512",
+    "C:\\Users\\coril\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\8.0.22\\microsoft.aspnetcore.app.ref.8.0.22.nupkg.sha512",
+    "C:\\Users\\coril\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.22\\microsoft.netcore.app.ref.8.0.22.nupkg.sha512",
+    "C:\\Users\\coril\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.22\\microsoft.windowsdesktop.app.ref.8.0.22.nupkg.sha512"
+  ],
+  "logs": []
+}

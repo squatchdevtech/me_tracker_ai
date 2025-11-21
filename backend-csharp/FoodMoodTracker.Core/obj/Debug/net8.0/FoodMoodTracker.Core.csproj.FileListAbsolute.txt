@@ -1,0 +1,13 @@
+E:\sourcecontrol\me_tracker_ai\backend-csharp\FoodMoodTracker.Core\obj\Debug\net8.0\FoodMoodTracker.Core.GeneratedMSBuildEditorConfig.editorconfig
+E:\sourcecontrol\me_tracker_ai\backend-csharp\FoodMoodTracker.Core\obj\Debug\net8.0\FoodMoodTracker.Core.AssemblyInfoInputs.cache
+E:\sourcecontrol\me_tracker_ai\backend-csharp\FoodMoodTracker.Core\obj\Debug\net8.0\FoodMoodTracker.Core.AssemblyInfo.cs
+E:\sourcecontrol\me_tracker_ai\backend-csharp\FoodMoodTracker.Core\obj\Debug\net8.0\FoodMoodTracker.Core.csproj.CoreCompileInputs.cache
+E:\sourcecontrol\me_tracker_ai\backend-csharp\FoodMoodTracker.Core\obj\Debug\net8.0\FoodMoodTracker.Core.sourcelink.json
+E:\sourcecontrol\me_tracker_ai\backend-csharp\FoodMoodTracker.Core\bin\Debug\net8.0\FoodMoodTracker.Core.deps.json
+E:\sourcecontrol\me_tracker_ai\backend-csharp\FoodMoodTracker.Core\bin\Debug\net8.0\FoodMoodTracker.Core.dll
+E:\sourcecontrol\me_tracker_ai\backend-csharp\FoodMoodTracker.Core\bin\Debug\net8.0\FoodMoodTracker.Core.pdb
+E:\sourcecontrol\me_tracker_ai\backend-csharp\FoodMoodTracker.Core\obj\Debug\net8.0\FoodMoodTracker.Core.csproj.AssemblyReference.cache
+E:\sourcecontrol\me_tracker_ai\backend-csharp\FoodMoodTracker.Core\obj\Debug\net8.0\FoodMoodTracker.Core.dll
+E:\sourcecontrol\me_tracker_ai\backend-csharp\FoodMoodTracker.Core\obj\Debug\net8.0\refint\FoodMoodTracker.Core.dll
+E:\sourcecontrol\me_tracker_ai\backend-csharp\FoodMoodTracker.Core\obj\Debug\net8.0\FoodMoodTracker.Core.pdb
+E:\sourcecontrol\me_tracker_ai\backend-csharp\FoodMoodTracker.Core\obj\Debug\net8.0\ref\FoodMoodTracker.Core.dll
